@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Profile - Easykirai{% endblock %}
+{% block page_title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="grid" style="grid-template-columns: 1fr 2fr; gap: 24px;">
+    <div class="card text-center">
+        <div style="font-size: 5rem; margin-bottom: 16px;">🎓</div>
+        <h2 style="margin-bottom: 8px;">{{ student.full_name }}</h2>
+        <p style="color: #666;">Student in {{ student.city }}</p>
+        <div style="margin-top: 24px; text-align: left; background-color: var(--light); padding: 16px; border-radius: var(--btn-radius);">
+            <p style="font-size: 0.9rem; color: #555; margin-bottom: 8px;"><strong>Phone:</strong> {{ student.phone }}</p>
+            <p style="font-size: 0.9rem; color: #555; margin-bottom: 8px;"><strong>Aadhaar:</strong> XXXX-XXXX-{{ student.aadhaar_number[-4:] }}</p>
+            <p style="font-size: 0.9rem; color: #555;"><strong>Joined:</strong> {{ student.created_at.strftime('%B %Y') }}</p>
+        </div>
+    </div>
+    
+    <div>
+        <h3 class="mb-4">Quick Stats</h3>
+        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+            <div class="card flex align-center gap-4">
+                <div style="background-color: var(--badge-green-bg); padding: 16px; border-radius: 50%; font-size: 1.5rem;">📦</div>
+                <div>
+                    <h4 style="color: #666; font-size: 0.9rem;">Total Rentals</h4>
+                    <p style="font-size: 1.5rem; font-weight: 700;">{{ total_rentals }}</p>
+                </div>
+            </div>
+            <div class="card flex align-center gap-4">
+                <div style="background-color: var(--badge-yellow-bg); padding: 16px; border-radius: 50%; font-size: 1.5rem;">⚡</div>
+                <div>
+                    <h4 style="color: #666; font-size: 0.9rem;">Active Now</h4>
+                    <p style="font-size: 1.5rem; font-weight: 700;">{{ active_now }}</p>
+                </div>
+            </div>
+            <div class="card flex align-center gap-4" style="grid-column: 1 / -1;">
+                <div style="background-color: #e0e7ff; padding: 16px; border-radius: 50%; font-size: 1.5rem;">💸</div>
+                <div>
+                    <h4 style="color: #666; font-size: 0.9rem;">Total Spent</h4>
+                    <p style="font-size: 1.5rem; font-weight: 700;">₹{{ total_spent }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <a href="{{ url_for('settings') }}" class="btn btn-secondary">Edit Profile Settings ⚙️</a>
+    </div>
+</div>
+{% endblock %}

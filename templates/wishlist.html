@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Wishlist - Easykirai{% endblock %}
+{% block page_title %}My Wishlist{% endblock %}
+
+{% block content %}
+<div class="grid">
+    <div class="card product-card">
+        <div class="product-img flex align-center" style="justify-content: center; background-color: var(--light); color: var(--primary); font-size: 3rem;">🛋️</div>
+        <div class="product-info">
+            <h3>Ergonomic Study Chair</h3>
+            <p class="product-meta">Furniture · Royal Woods</p>
+            <p class="product-price">₹450<span style="font-size: 0.8rem; color: #666; font-weight: 400;">/mo</span></p>
+            <div class="flex justify-between align-center mt-4">
+                <button class="btn btn-secondary" style="padding: 8px 16px; width: auto; color: var(--badge-red-text);">Remove</button>
+            </div>
+        </div>
+    </div>
+    <div class="card product-card">
+        <div class="product-img flex align-center" style="justify-content: center; background-color: var(--light); color: var(--primary); font-size: 3rem;">📚</div>
+        <div class="product-info">
+            <h3>Medical Books Set 2nd Year</h3>
+            <p class="product-meta">Study · Book Hub</p>
+            <p class="product-price">₹300<span style="font-size: 0.8rem; color: #666; font-weight: 400;">/mo</span></p>
+            <div class="flex justify-between align-center mt-4">
+                <button class="btn btn-secondary" style="padding: 8px 16px; width: auto; color: var(--badge-red-text);">Remove</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

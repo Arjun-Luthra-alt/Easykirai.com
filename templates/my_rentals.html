@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% block title %}My Rentals - Easykirai{% endblock %}
+{% block page_title %}My Rentals{% endblock %}
+
+{% block content %}
+<div class="card mb-4" style="padding: 0; overflow: hidden;">
+    <div style="display: flex; background-color: #f8f9fa; border-bottom: 1px solid #ddd;">
+        <button class="tab-btn active" onclick="showTab('pending')" style="flex: 1; padding: 16px; border: none; background: none; font-weight: 600; cursor: pointer;">Pending ⏳</button>
+        <button class="tab-btn" onclick="showTab('active')" style="flex: 1; padding: 16px; border: none; background: none; font-weight: 600; cursor: pointer;">Active ✅</button>
+        <button class="tab-btn" onclick="showTab('completed')" style="flex: 1; padding: 16px; border: none; background: none; font-weight: 600; cursor: pointer;">Completed</button>
+        <button class="tab-btn" onclick="showTab('rejected')" style="flex: 1; padding: 16px; border: none; background: none; font-weight: 600; cursor: pointer;">Rejected ❌</button>
+    </div>
+</div>
+
+<div id="pending" class="tab-content">
+    {% if pending_orders %}
+        {% for order in pending_orders %}
+            <div class="card mb-4 flex align-center gap-4">
+                <div style="width: 80px; height: 80px; background-color: var(--light); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                    {% if order.product.category == 'Furniture' %}🛋️{% elif order.product.category == 'Electronics' %}💻{% else %}📚{% endif %}
+                </div>
+                <div style="flex-grow: 1;">
+                    <h3 style="margin-bottom: 4px;">{{ order.product.name }}</h3>
+                    <p style="color: #666; font-size: 0.9rem;">Dealer: {{ order.retailer_obj.shop_name }} | Duration: {{ order.duration_months }} Months</p>
+                </div>
+                <div style="text-align: right;">
+                    <p style="font-weight: 700; color: var(--primary); margin-bottom: 8px;">₹{{ order.product.price_per_month * order.duration_months }}</p>
+                    <span class="badge badge-yellow">Pending</span>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="card text-center" style="padding: 40px;">
+            <p style="color: #666; margin-bottom: 16px;">No pending requests.</p>
+            <a href="{{ url_for('products') }}" class="btn" style="width: auto;">Browse Items</a>
+        </div>
+    {% endif %}
+</div>
+
+<div id="active" class="tab-content" style="display: none;">
+    {% if active_orders %}
+        {% for order in active_orders %}
+            <div class="card mb-4 flex align-center gap-4">
+                <div style="width: 80px; height: 80px; background-color: var(--badge-green-bg); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                    ✅
+                </div>
+                <div style="flex-grow: 1;">
+                    <h3 style="margin-bottom: 4px;"><a href="{{ url_for('product_detail', id=order.product_id) }}" style="text-decoration: none; color: inherit;">{{ order.product.name }}</a></h3>
+                    <p style="color: #666; font-size: 0.9rem;">Dealer: {{ order.retailer_obj.shop_name }} | Delivery: {{ order.expected_delivery }}</p>
+                </div>
+                <div style="text-align: right;">
+                    <p style="font-weight: 700; color: var(--primary); margin-bottom: 8px;">₹{{ order.product.price_per_month * order.duration_months }}</p>
+                    {% if order.payment_status == 'PAID' %}
+                        <span class="badge badge-green">Paid</span>
+                    {% else %}
+                        <span class="badge badge-red">Unpaid</span>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="card text-center" style="padding: 40px;">
+            <p style="color: #666; margin-bottom: 16px;">No active rentals.</p>
+        </div>
+    {% endif %}
+</div>
+
+<div id="completed" class="tab-content" style="display: none;">
+    {% if completed_orders %}
+        <!-- loop -->
+    {% else %}
+        <div class="card text-center" style="padding: 40px;">
+            <p style="color: #666; margin-bottom: 16px;">No completed rentals.</p>
+        </div>
+    {% endif %}
+</div>
+
+<div id="rejected" class="tab-content" style="display: none;">
+    {% if rejected_orders %}
+        {% for order in rejected_orders %}
+            <div class="card mb-4 flex align-center gap-4">
+                <div style="width: 80px; height: 80px; background-color: var(--badge-red-bg); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                    ❌
+                </div>
+                <div style="flex-grow: 1;">
+                    <h3 style="margin-bottom: 4px;">{{ order.product.name }}</h3>
+                    <p style="color: #666; font-size: 0.9rem;">Dealer: {{ order.retailer_obj.shop_name }} | Reason: {{ order.retailer_note }}</p>
+                </div>
+                <div style="text-align: right;">
+                    <span class="badge badge-red">Rejected</span>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="card text-center" style="padding: 40px;">
+            <p style="color: #666; margin-bottom: 16px;">No rejected requests.</p>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script>
+function showTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+    document.getElementById(tabId).style.display = 'block';
+    
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.style.borderBottom = 'none';
+        btn.style.color = '#333';
+    });
+    event.currentTarget.style.borderBottom = '3px solid var(--primary)';
+    event.currentTarget.style.color = 'var(--primary)';
+}
+// Init first tab styling
+document.querySelector('.tab-btn').style.borderBottom = '3px solid var(--primary)';
+document.querySelector('.tab-btn').style.color = 'var(--primary)';
+</script>
+{% endblock %}

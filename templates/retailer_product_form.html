@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}{% if product %}Edit{% else %}Add{% endif %} Product - Easykirai{% endblock %}
+{% block page_title %}{% if product %}Edit{% else %}Add New{% endif %} Product{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <form method="POST">
+        <div class="form-group">
+            <label>Product Name</label>
+            <input type="text" name="name" class="form-control" value="{{ product.name if product else '' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Category</label>
+            <select name="category" class="form-control" required style="appearance: auto; background-color: white;">
+                <option value="Furniture" {% if product and product.category == 'Furniture' %}selected{% endif %}>Furniture</option>
+                <option value="Electronics" {% if product and product.category == 'Electronics' %}selected{% endif %}>Electronics</option>
+                <option value="Study" {% if product and product.category == 'Study' %}selected{% endif %}>Study Supplies</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" class="form-control" rows="4" required>{{ product.description if product else '' }}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label>Price Per Month (₹)</label>
+            <input type="number" name="price_per_month" class="form-control" min="0" value="{{ product.price_per_month if product else '' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Image URL (Optional)</label>
+            <input type="url" name="image_url" class="form-control" placeholder="https://example.com/image.jpg" value="{{ product.image_url if product else '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label>Status</label>
+            <select name="status" class="form-control" style="appearance: auto; background-color: white;">
+                <option value="AVAILABLE" {% if product and product.status == 'AVAILABLE' %}selected{% endif %}>AVAILABLE</option>
+                <option value="RENTED" {% if product and product.status == 'RENTED' %}selected{% endif %}>RENTED</option>
+            </select>
+        </div>
+        
+        <div class="flex justify-between align-center mt-4">
+            <a href="{{ url_for('retailer_products') }}" class="btn btn-secondary" style="width: auto;">Cancel</a>
+            <button type="submit" class="btn" style="width: auto;">{% if product %}Update{% else %}Save{% endif %} Product</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

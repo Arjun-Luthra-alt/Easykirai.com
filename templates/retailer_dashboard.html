@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block title %}Retailer Dashboard - Easykirai{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="grid mb-4">
+    <div class="card" style="border-left: 4px solid var(--primary);">
+        <h3 style="color: #666; font-size: 0.9rem; margin-bottom: 8px;">Total Products</h3>
+        <p style="font-size: 1.8rem; font-weight: 700;">{{ total_products }}</p>
+    </div>
+    <div class="card" style="border-left: 4px solid #f59e0b; background-color: #fffbeb;">
+        <h3 style="color: #666; font-size: 0.9rem; margin-bottom: 8px;">Pending Requests</h3>
+        <p style="font-size: 1.8rem; font-weight: 700;">{{ pending_orders|length }}</p>
+    </div>
+    <div class="card" style="border-left: 4px solid #10b981;">
+        <h3 style="color: #666; font-size: 0.9rem; margin-bottom: 8px;">Active Rentals</h3>
+        <p style="font-size: 1.8rem; font-weight: 700;">{{ active_orders }}</p>
+    </div>
+    <div class="card" style="border-left: 4px solid #6366f1;">
+        <h3 style="color: #666; font-size: 0.9rem; margin-bottom: 8px;">Total Earnings</h3>
+        <p style="font-size: 1.8rem; font-weight: 700;">₹{{ earnings }}</p>
+    </div>
+</div>
+
+{% if pending_orders %}
+<div class="mb-4">
+    <h2 class="mb-4 flex align-center gap-4">Pending Requests <span class="badge badge-yellow">{{ pending_orders|length }} New</span></h2>
+    {% for order in pending_orders %}
+    <div class="card mb-4" style="border: 1px solid #fde047;">
+        <div class="flex justify-between align-center">
+            <div>
+                <h3 style="margin-bottom: 4px;">{{ order.product.name }} ({{ order.duration_months }} Months)</h3>
+                <p style="color: #666; font-size: 0.9rem;">Requested by: {{ order.student.full_name }} ({{ order.student.city }}) | Phone: {{ order.student.phone }}</p>
+            </div>
+            <div style="text-align: right;">
+                <p style="font-weight: 700; color: var(--primary);">₹{{ order.product.price_per_month * order.duration_months }}</p>
+            </div>
+        </div>
+        
+        <div class="mt-4 flex gap-4" style="border-top: 1px solid #eee; padding-top: 16px;">
+            <div style="flex: 1; background-color: #f0fdf4; padding: 16px; border-radius: var(--btn-radius);">
+                <form action="{{ url_for('retailer_order_accept', id=order.id) }}" method="POST">
+                    <div class="form-group">
+                        <label>Expected Delivery Date</label>
+                        <input type="date" name="expected_delivery" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Note to Student (Optional)</label>
+                        <input type="text" name="retailer_note" class="form-control" placeholder="E.g., Will deliver by evening.">
+                    </div>
+                    <button type="submit" class="btn" style="background-color: #10b981;">Accept Request</button>
+                </form>
+            </div>
+            <div style="flex: 1; background-color: #fef2f2; padding: 16px; border-radius: var(--btn-radius);">
+                <form action="{{ url_for('retailer_order_reject', id=order.id) }}" method="POST">
+                    <div class="form-group">
+                        <label>Reason for Rejection</label>
+                        <input type="text" name="retailer_note" class="form-control" placeholder="E.g., Out of stock currently." required>
+                    </div>
+                    <!-- Empty div to align button -->
+                    <div class="form-group" style="visibility: hidden;">
+                        <label>Hidden</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <button type="submit" class="btn" style="background-color: #ef4444;">Reject Request</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="flex justify-between align-center mb-4 mt-4">
+    <h2>Your Recent Products</h2>
+    <a href="{{ url_for('retailer_products') }}" class="btn" style="width: auto;">View All Products</a>
+</div>
+
+<div class="grid">
+    {% for product in products %}
+    <div class="card product-card">
+        {% if product.image_url %}
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-img">
+        {% else %}
+            <div class="product-img flex align-center" style="justify-content: center; background-color: var(--light); color: var(--primary); font-size: 3rem;">
+                {% if product.category == 'Furniture' %}🛋️{% elif product.category == 'Electronics' %}💻{% else %}📚{% endif %}
+            </div>
+        {% endif %}
+        <div class="product-info">
+            <h3>{{ product.name }}</h3>
+            <p class="product-meta">{{ product.category }}</p>
+            <p class="product-price">₹{{ product.price_per_month }}<span style="font-size: 0.8rem; color: #666; font-weight: 400;">/mo</span></p>
+        </div>
+    </div>
+    {% else %}
+    <p>No products listed yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

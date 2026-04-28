@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}All Orders - Easykirai{% endblock %}
+{% block page_title %}Orders Management{% endblock %}
+
+{% block content %}
+<div class="card" style="padding: 0; overflow: hidden;">
+    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead style="background-color: #f8f9fa; border-bottom: 2px solid #eee;">
+            <tr>
+                <th style="padding: 16px; font-weight: 600;">Date</th>
+                <th style="padding: 16px; font-weight: 600;">Student</th>
+                <th style="padding: 16px; font-weight: 600;">Product Info</th>
+                <th style="padding: 16px; font-weight: 600;">Total Amount</th>
+                <th style="padding: 16px; font-weight: 600;">Status</th>
+                <th style="padding: 16px; font-weight: 600; text-align: right;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 16px; color: #666; font-size: 0.9rem;">
+                    {{ order.created_at.strftime('%Y-%m-%d') }}
+                </td>
+                <td style="padding: 16px;">
+                    <p style="font-weight: 600;">{{ order.student.full_name }}</p>
+                    <p style="color: #666; font-size: 0.85rem;">{{ order.student.phone }} | {{ order.student.city }}</p>
+                </td>
+                <td style="padding: 16px;">
+                    <p style="font-weight: 600;">{{ order.product.name }}</p>
+                    <p style="color: #666; font-size: 0.85rem;">Duration: {{ order.duration_months }} Months</p>
+                </td>
+                <td style="padding: 16px; font-weight: 700; color: var(--primary);">
+                    ₹{{ order.product.price_per_month * order.duration_months }}
+                    {% if order.payment_status == 'PAID' %}
+                        <span style="display:block; font-size:0.75rem; color:#10b981;">(PAID)</span>
+                    {% endif %}
+                </td>
+                <td style="padding: 16px;">
+                    {% if order.status == 'PENDING' %}
+                        <span class="badge badge-yellow">Pending</span>
+                    {% elif order.status == 'ACTIVE' %}
+                        <span class="badge badge-green">Active</span>
+                    {% elif order.status == 'REJECTED' %}
+                        <span class="badge badge-red">Rejected</span>
+                    {% else %}
+                        <span class="badge" style="background-color: #eee; color: #555;">{{ order.status }}</span>
+                    {% endif %}
+                </td>
+                <td style="padding: 16px; text-align: right;">
+                    {% if order.status == 'PENDING' %}
+                        <a href="{{ url_for('retailer_dashboard') }}" class="btn" style="padding: 6px 12px; font-size: 0.8rem; background-color: var(--primary);">Review</a>
+                    {% else %}
+                        <span style="color: #999; font-size: 0.85rem;">No action</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" style="padding: 40px; text-align: center; color: #666;">
+                    No orders have been placed yet.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

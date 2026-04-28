@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Retailer Login - Easykirai{% endblock %}
+{% block auth_content %}
+<div class="auth-card">
+    <h2>Retailer Login</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label>Phone Number</label>
+            <input type="text" name="phone" class="form-control" required pattern="\d{10}">
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
+        <button type="submit" class="btn mt-4">Login</button>
+    </form>
+    <p class="text-center mt-4">Don't have an account? <a href="{{ url_for('retailer_register') }}">Register</a></p>
+    <p class="text-center mt-4"><a href="{{ url_for('landing') }}">← Back to Home</a></p>
+</div>
+{% endblock %}

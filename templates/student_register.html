@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Student Register - Easykirai{% endblock %}
+{% block auth_content %}
+<div class="auth-card">
+    <h2>Student Registration</h2>
+    <form method="POST" id="studentRegForm">
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" name="full_name" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label>Father's Name</label>
+            <input type="text" name="father_name" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label>Phone Number (10 digits)</label>
+            <input type="text" name="phone" class="form-control" required pattern="\d{10}">
+        </div>
+        <div class="form-group">
+            <label>Aadhaar Number (12 digits)</label>
+            <input type="text" name="aadhaar_number" class="form-control" required pattern="\d{12}">
+        </div>
+        <div class="form-group">
+            <label>City</label>
+            <input type="text" name="city" class="form-control" value="Dehradun" required>
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" id="password" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" id="confirm_password" class="form-control" required>
+        </div>
+        <div class="form-group" style="display: flex; gap: 8px; align-items: start;">
+            <input type="checkbox" required id="terms" style="margin-top: 4px;">
+            <label for="terms" style="font-size: 0.85rem;">I agree to the Terms & Conditions</label>
+        </div>
+        <button type="submit" class="btn mt-4">Register</button>
+    </form>
+    <p class="text-center mt-4">Already have an account? <a href="{{ url_for('student_login') }}">Login</a></p>
+    <p class="text-center mt-4"><a href="{{ url_for('landing') }}">← Back to Home</a></p>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+document.getElementById('studentRegForm').addEventListener('submit', function(e) {
+    var p1 = document.getElementById('password').value;
+    var p2 = document.getElementById('confirm_password').value;
+    if (p1 !== p2) {
+        e.preventDefault();
+        alert('Passwords do not match!');
+    }
+});
+</script>
+{% endblock %}

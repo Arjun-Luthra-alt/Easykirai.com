@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Easykirai{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    {% if not hide_sidebar %}
+    <div class="sidebar">
+        <div class="logo">
+            Easy<span>kirai</span>
+        </div>
+        <nav class="nav-links">
+            {% if session.get('user_role') == 'student' %}
+                <a href="{{ url_for('home') }}" class="{% if request.endpoint == 'home' %}active{% endif %}">🏠 Home</a>
+                <a href="{{ url_for('products') }}" class="{% if request.endpoint == 'products' %}active{% endif %}">🛋️ Products</a>
+                <a href="{{ url_for('my_rentals') }}" class="{% if request.endpoint == 'my_rentals' %}active{% endif %}">📦 My Rentals</a>
+                <a href="{{ url_for('wishlist') }}" class="{% if request.endpoint == 'wishlist' %}active{% endif %}">❤️ Wishlist</a>
+                <a href="{{ url_for('messages') }}" class="{% if request.endpoint == 'messages' %}active{% endif %}">💬 Messages</a>
+            {% elif session.get('user_role') == 'retailer' %}
+                <a href="{{ url_for('retailer_dashboard') }}" class="{% if request.endpoint == 'retailer_dashboard' %}active{% endif %}">📊 Dashboard</a>
+                <a href="{{ url_for('retailer_products') }}" class="{% if request.endpoint == 'retailer_products' %}active{% endif %}">🏢 My Products</a>
+                <a href="{{ url_for('retailer_orders') }}" class="{% if request.endpoint == 'retailer_orders' %}active{% endif %}">📋 Orders</a>
+            {% endif %}
+        </nav>
+        <div class="user-info-card">
+            <p><strong>{{ session.get('user_name', 'User') }}</strong></p>
+            <p style="font-size: 0.85rem; color: #666; text-transform: capitalize;">{{ session.get('user_role', '') }}</p>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Log out</a>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="topbar">
+            <h1>{% block page_title %}{% endblock %}</h1>
+            <div class="topbar-right">
+                <input type="text" placeholder="Search..." class="search-bar">
+                <span class="notification-bell">🔔</span>
+                <span class="location-pill">📍 Dehradun</span>
+            </div>
+        </div>
+        <div class="content-body">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <!-- category: success is green, danger is red, warning is yellow -->
+                        <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    {% else %}
+    <!-- For Auth/Landing modes without sidebar -->
+    <div class="auth-wrapper">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block auth_content %}{% endblock %}
+    </div>
+    {% endif %}
+    
+    <script>
+        // Global JS if needed
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

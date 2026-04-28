@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Easykirai - Rent Smart, Study Hard{% endblock %}
+{% block auth_content %}
+<div style="text-align: center; color: white; margin-bottom: 40px;">
+    <h1 style="font-size: 3rem; margin-bottom: 10px;">Easy<span style="color: var(--light);">kirai</span></h1>
+    <p style="font-size: 1.2rem; opacity: 0.9;">Rent Smart. Study Hard. Dehradun's #1 Student Rental Platform.</p>
+</div>
+<div class="grid" style="grid-template-columns: 1fr 1fr; max-width: 800px; width: 100%;">
+    <div class="card" style="text-align: center; padding: 40px;">
+        <div style="font-size: 4rem; margin-bottom: 20px;">🎓</div>
+        <h2 style="margin-bottom: 16px;">Student</h2>
+        <p style="color: #666; margin-bottom: 24px;">Browse & rent furniture, electronics, study gear</p>
+        <a href="{{ url_for('student_login') }}" class="btn">Student Login</a>
+    </div>
+    <div class="card" style="text-align: center; padding: 40px;">
+        <div style="font-size: 4rem; margin-bottom: 20px;">🏪</div>
+        <h2 style="margin-bottom: 16px;">Retailer</h2>
+        <p style="color: #666; margin-bottom: 24px;">List products & reach 500+ students</p>
+        <a href="{{ url_for('retailer_login') }}" class="btn">Retailer Login</a>
+    </div>
+</div>
+{% endblock %}

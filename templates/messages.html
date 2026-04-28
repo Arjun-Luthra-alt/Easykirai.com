@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Messages - Easykirai{% endblock %}
+{% block page_title %}Messages{% endblock %}
+
+{% block content %}
+<div class="grid" style="grid-template-columns: 1fr 2fr; gap: 0; background: white; border-radius: var(--card-radius); box-shadow: var(--shadow); overflow: hidden; height: 600px;">
+    <!-- Left Chat List -->
+    <div style="border-right: 1px solid #eee; overflow-y: auto;">
+        <div style="padding: 20px; border-bottom: 1px solid #eee; background-color: var(--light);">
+            <h3 style="font-size: 1.1rem; color: var(--primary);">System Messages</h3>
+        </div>
+        <div style="padding: 20px; border-bottom: 1px solid #eee;">
+            <h3 style="font-size: 1.1rem;">Royal Woods Dealer</h3>
+            <p style="color: #666; font-size: 0.9rem; margin-top: 4px;">Expected delivery is tomorrow...</p>
+        </div>
+        <div style="padding: 20px; border-bottom: 1px solid #eee;">
+            <h3 style="font-size: 1.1rem;">Electro Hub</h3>
+            <p style="color: #666; font-size: 0.9rem; margin-top: 4px;">Yes, the laptop comes with a charger.</p>
+        </div>
+    </div>
+    
+    <!-- Right Chat Area -->
+    <div style="display: flex; flex-direction: column;">
+        <div style="padding: 20px; border-bottom: 1px solid #eee; background: white;">
+            <h3 style="font-size: 1.2rem;">Royal Woods Dealer</h3>
+        </div>
+        <div style="flex-grow: 1; padding: 20px; background-color: #fafafa; overflow-y: auto;">
+            <div style="background: white; padding: 12px 16px; border-radius: 12px; border-bottom-left-radius: 0; display: inline-block; margin-bottom: 16px; max-width: 80%; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                Hi, I wanted to ask when the chair will be delivered?
+            </div><br>
+            <div style="background: var(--primary); color: white; padding: 12px 16px; border-radius: 12px; border-bottom-right-radius: 0; display: inline-block; float: right; margin-bottom: 16px; max-width: 80%; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                Expected delivery is tomorrow evening. We will call before arriving.
+            </div><div style="clear: both;"></div>
+        </div>
+        <div style="padding: 16px; background: white; border-top: 1px solid #eee; display: flex; gap: 12px;">
+            <input type="text" class="form-control" placeholder="Type a message..." style="margin-bottom: 0;">
+            <button class="btn" style="width: auto;">Send</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

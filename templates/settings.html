@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Settings - Easykirai{% endblock %}
+{% block page_title %}Settings{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin-bottom: 24px;">
+    <h3 style="margin-bottom: 16px; border-bottom: 1px solid #eee; padding-bottom: 12px;">Account Information</h3>
+    <form>
+        <div class="form-group">
+            <label>City</label>
+            <input type="text" class="form-control" value="Dehradun">
+        </div>
+        <button type="button" class="btn" onclick="alert('Settings saved!')">Save Changes</button>
+    </form>
+</div>
+
+<div class="card" style="max-width: 600px; margin-bottom: 24px; border: 1px solid #fecaca; background-color: #fef2f2;">
+    <h3 style="margin-bottom: 16px; color: var(--badge-red-text);">Danger Zone</h3>
+    <p style="color: #666; font-size: 0.9rem; margin-bottom: 16px;">Once you delete your account, there is no going back. Please be certain.</p>
+    <button class="btn" style="background-color: #ef4444; width: auto;">Delete Account</button>
+</div>
+{% endblock %}

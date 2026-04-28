@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.name }} - Easykirai{% endblock %}
+{% block page_title %}Product Detail{% endblock %}
+
+{% block content %}
+<div class="grid" style="grid-template-columns: 1fr 1fr; gap: 40px;">
+    <div>
+        {% if product.image_url %}
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" style="width: 100%; border-radius: var(--card-radius); object-fit: cover;">
+        {% else %}
+            <div style="width: 100%; height: 400px; border-radius: var(--card-radius); background-color: var(--light); display: flex; align-items: center; justify-content: center; font-size: 6rem; color: var(--primary);">
+                {% if product.category == 'Furniture' %}🛋️{% elif product.category == 'Electronics' %}💻{% else %}📚{% endif %}
+            </div>
+        {% endif %}
+    </div>
+    
+    <div>
+        <h2 style="font-size: 2rem; margin-bottom: 8px;">{{ product.name }}</h2>
+        <p style="color: #666; font-size: 1.1rem; margin-bottom: 16px;">{{ product.category }} · Dealer: {{ retailer.shop_name }}</p>
+        
+        <div style="background-color: white; padding: 20px; border-radius: var(--card-radius); box-shadow: var(--shadow); margin-bottom: 24px;">
+            <p style="font-size: 2rem; font-weight: 700; color: var(--primary); margin-bottom: 8px;">₹{{ product.price_per_month }}<span style="font-size: 1rem; color: #666; font-weight: 400;">/month</span></p>
+            <p style="color: #666; font-size: 0.9rem;">+ ₹{{ product.price_per_month * 2 }} Refundable Deposit (estimated)</p>
+        </div>
+        
+        <div style="margin-bottom: 24px;">
+            <h3 style="margin-bottom: 8px;">Description</h3>
+            <p style="line-height: 1.6; color: #444;">{{ product.description }}</p>
+        </div>
+
+        {% if not existing_order %}
+            <div class="card" style="background-color: var(--light); border: 1px solid var(--primary);">
+                <h3 style="margin-bottom: 16px;">Request Rental</h3>
+                <form action="{{ url_for('request_product', id=product.id) }}" method="POST">
+                    <div class="form-group">
+                        <label>Duration (Months)</label>
+                        <input type="number" name="duration_months" class="form-control" min="1" max="12" value="1" required>
+                    </div>
+                    <button type="submit" class="btn">Send Request</button>
+                </form>
+            </div>
+        {% else %}
+            {% if existing_order.status == 'PENDING' %}
+                <div class="card" style="background-color: var(--badge-yellow-bg); border: 1px solid #fde047; text-align: center;">
+                    <h3 style="color: var(--badge-yellow-text); margin-bottom: 8px;">🕐 Request Sent!</h3>
+                    <p style="color: var(--badge-yellow-text);">Waiting for retailer response.</p>
+                </div>
+            {% elif existing_order.status == 'ACTIVE' and existing_order.payment_status == 'UNPAID' %}
+                <div class="card" style="background-color: var(--badge-green-bg); border: 1px solid #86efac; text-align: center;">
+                    <h3 style="color: var(--badge-green-text); margin-bottom: 8px;">✅ Request Accepted!</h3>
+                    <p style="color: var(--badge-green-text); margin-bottom: 16px;">Expected Delivery: {{ existing_order.expected_delivery }}</p>
+                    <button id="pay-btn" class="btn" style="background-color: #10b981;">Pay Now (₹{{ existing_order.duration_months * product.price_per_month }})</button>
+                </div>
+            {% elif existing_order.status == 'ACTIVE' and existing_order.payment_status == 'PAID' %}
+                <div class="card" style="background-color: var(--badge-green-bg); border: 1px solid #86efac; text-align: center;">
+                    <h3 style="color: var(--badge-green-text); margin-bottom: 8px;">✅ Paid!</h3>
+                    <p style="color: var(--badge-green-text);">Expected Delivery: {{ existing_order.expected_delivery }}</p>
+                </div>
+            {% elif existing_order.status == 'REJECTED' %}
+                <div class="card" style="background-color: var(--badge-red-bg); border: 1px solid #fca5a5; text-align: center;">
+                    <h3 style="color: var(--badge-red-text); margin-bottom: 8px;">❌ Rejected</h3>
+                    <p style="color: var(--badge-red-text);">Reason: {{ existing_order.retailer_note }}</p>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if existing_order and existing_order.status == 'ACTIVE' and existing_order.payment_status == 'UNPAID' %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+document.getElementById('pay-btn').onclick = function(e) {
+    e.preventDefault();
+    fetch('{{ url_for("create_payment", order_id=existing_order.id) }}', { method: 'POST' })
+    .then(r => r.json())
+    .then(data => {
+        var options = {
+            "key": "your_key_id",
+            "amount": data.amount,
+            "currency": "INR",
+            "name": "Easykirai",
+            "description": "Rental Payment",
+            "order_id": data.id,
+            "handler": function (response){
+                fetch('{{ url_for("verify_payment") }}', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_signature: response.razorpay_signature
+                    })
+                }).then(() => window.location.reload());
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    });
+}
+</script>
+{% endif %}
+{% endblock %}
