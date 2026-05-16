@@ -11,7 +11,6 @@ app.config["SECRET_KEY"] = "easykirai-secret-key"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///easykirai.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
-
 RAZORPAY_KEY_ID = "your_key_id"
 RAZORPAY_KEY_SECRET = "your_key_secret"
 razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
