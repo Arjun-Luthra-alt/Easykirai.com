@@ -103,7 +103,7 @@ def retailer_login_required(f):
 @app.route('/')
 def landing():
     if session.get('user_role') == 'student':
-        return redirect(url_for('home'))
+        return redirect(url_for('home')) 
     elif session.get('user_role') == 'retailer':
         return redirect(url_for('retailer_dashboard'))
     return render_template('landing.html', hide_sidebar=True)
