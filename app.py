@@ -216,7 +216,6 @@ def home():
     products = Product.query.filter_by(status='AVAILABLE').order_by(Product.created_at.desc()).limit(6).all()
     student_id = session.get('user_id')
     active_rentals = Order.query.filter_by(student_id=student_id, status='ACTIVE').count()
-    
     # Calculate monthly spending (sum of price of active rentals)
     active_orders = Order.query.filter_by(student_id=student_id, status='ACTIVE').all()
     monthly_spending = sum([order.product.price_per_month for order in active_orders])
